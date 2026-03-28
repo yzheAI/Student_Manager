@@ -1,12 +1,12 @@
 from typing import List
 from model.student import Student
-from utils.file_util import load_data, save_data
 from utils.log_util import logger
 
 
 class StudentManager:
-    def __init__(self):
-        self.students: List[Student] = self.load_from_file()
+    def __init__(self, repo):
+        self.repo = repo
+        self.students: List[Student] = self.repo.load()
 
     def add_student(self, student: Student) -> None:
         if self.find_student(student.student_id):
@@ -18,7 +18,6 @@ class StudentManager:
         print("添加成功")
 
     def show_all(self) -> None:
-        # self.load_from_file()
         if self.students is None:
             print("暂无学生")
             return
@@ -46,7 +45,6 @@ class StudentManager:
         print("修改成功")
 
     def delete_student(self, student_id: str) -> None:
-        # self.load_from_file()
         student = self.find_student(student_id)
         if student:
             self.students.remove(student)
@@ -56,11 +54,6 @@ class StudentManager:
         else:
             print("不存在")
 
-    def load_from_file(self) -> List[Student]:
-        data = load_data()  # 暂存json
-        return [Student.from_dict(d) for d in data]  # 对象列表
-
     def save_to_file(self) -> None:
-        data = [s.to_dict() for s in self.students]  # 列表
-        save_data(data)
+        self.repo.save(self.students)
 

@@ -4,8 +4,9 @@ from app.handlers.handle_show import show
 from app.handlers.handle_find import find_student_id
 from app.handlers.handle_delete import handle_delete_student
 from app.handlers.handle_update import handle_update_student
-
-manager = StudentManager()
+from repository.student_repo import StudentRepository
+repo = StudentRepository("data/students.json")
+manager = StudentManager(repo)
 
 
 def menu() -> None:

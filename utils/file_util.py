@@ -2,7 +2,7 @@ import os
 import json
 from utils.log_util import logger
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
-DATA_PATH = os.path.join(BASE_DIR, 'data', 'students.json')
+DATA_PATH = os.path.join(BASE_DIR, 'data1', 'students1.json')
 
 
 def load_data() -> list[dict]:

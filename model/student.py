@@ -12,7 +12,7 @@ class Student(Person):
     def __init__(self, name, sex, age, student_id, score):
         super().__init__(name, sex, age)
         self.student_id: str = student_id
-        self.score: int = score
+        self.score = score
 
     def to_dict(self) -> dict:  # return dict
         return {

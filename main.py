@@ -5,8 +5,15 @@ from app.handlers.handle_find import find_student_id
 from app.handlers.handle_delete import handle_delete_student
 from app.handlers.handle_update import handle_update_student
 from repository.student_repo import StudentRepository
+from fastapi import FastAPI
+from app.api.student_api import router
+import uvicorn
 repo = StudentRepository("data/students.json")
 manager = StudentManager(repo)
+
+
+app = FastAPI(title="学生管理系统 API")
+app.include_router(router)
 
 
 def menu() -> None:
@@ -32,4 +39,11 @@ def menu() -> None:
             break
 
 
-menu()
+if __name__ == '__main__':
+    uvicorn.run(
+        "main:app",
+        host="127.0.0.1",
+        port=8000,
+        reload=True,
+    )
+# menu()

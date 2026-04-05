@@ -33,20 +33,20 @@ class StudentManager:
                 return s
         return None
 
-    def update_student(self, student: Student) -> bool:
-        # self.load_from_file()
-        s = self.find_student(student.student_id)
-        if s is None:
-            # print("无信息")
-            return False
-        else:
-            s.name = student.name
-            s.sex = student.sex
-            s.age = student.age
-            s.score = student.score
-            self.save_to_file()
-        # print("修改成功")
-        return True
+    # def update_student(self, student: Student) -> bool:
+    #     # self.load_from_file()
+    #     s = self.find_student(student.student_id)
+    #     if s is None:
+    #         # print("无信息")
+    #         return False
+    #     else:
+    #         s.name = student.name
+    #         s.sex = student.sex
+    #         s.age = student.age
+    #         s.score = student.score
+    #         self.save_to_file()
+    #     # print("修改成功")
+    #     return True
 
     def delete_student(self, student_id: str) -> bool:
         student = self.find_student(student_id)

@@ -27,18 +27,33 @@ def delete_student(db: Session, s_id: str) -> bool:
     return True
 
 
-def update_student(db: Session, student_id: str, name=None, age=None, sex=None, score=None) -> Student:
+# def update_student(db: Session, student_id: str, name=None, age=None, sex=None, score=None) -> Student:
+#     student = get_student(db, student_id)
+#     if not student:
+#         raise Exception("Student not found")
+#     if name is not None:
+#         student.name = name
+#     if sex is not None:
+#         student.sex = sex
+#     if age is not None:
+#         student.age = age
+#     if score is not None:
+#         student.score = score
+#     db.commit()
+#     db.refresh(student)
+#     return student
+
+def update_student(db: Session, student_id: str, **kwargs) -> Student:
+    """
+    kwargs: 只包含需要更新的字段
+    自动过滤 None，未传字段不会被覆盖
+    """
     student = get_student(db, student_id)
     if not student:
         raise Exception("Student not found")
-    if name is not None:
-        student.name = name
-    if sex is not None:
-        student.sex = sex
-    if age is not None:
-        student.age = age
-    if score is not None:
-        student.score = score
+    for key, value in kwargs.items():
+        if value is not None:
+            setattr(student, key, value)
     db.commit()
     db.refresh(student)
     return student

@@ -1,14 +1,11 @@
-from repository.student_repo import StudentRepository
-from service.student_service import StudentManager
-from model.student import Student
-from fastapi import FastAPI, Depends, HTTPException, APIRouter
+from fastapi import Depends, HTTPException, APIRouter
 from pydantic import BaseModel
 from model.student_schema import StudentResponse, StudentUpdate, StudentCreate
+from database import crud
+from sqlalchemy.orm import Session
+from database.db_core import get_db
 
 router = APIRouter()
-repo = StudentRepository("data/students.json")
-manager = StudentManager(repo)
-
 """
 验证数据类型，
 自动生成JSON schema
@@ -20,7 +17,7 @@ class StudentBase(BaseModel):
     name: str
     sex: str
     age: int
-    student_id: str
+    s_id: str
     score: int
 
 
@@ -33,48 +30,30 @@ class StudentBase(BaseModel):
 
 
 @router.post("/students/", response_model=StudentResponse)
-async def add_student(student: StudentCreate):  # 自动解析为StudentBase对象
-    s = Student(student.name, student.sex, student.age, student.student_id, student.score)
-    if not manager.add_student(s):
-        raise HTTPException(404, "学生已存在")
-    return s
+async def add_student(student: StudentCreate, db: Session = Depends(get_db)):  # 自动解析为StudentBase对象
+    return crud.create_student(db, student.name, student.sex, student.age, student.s_id, student.score)
 
 
 @router.get("/students/{student_id}", response_model=StudentResponse)
-async def get_students(student_id: str):
-    s = manager.find_student(student_id)
+async def get_students(student_id: str, db: Session = Depends(get_db)):
+    s=crud.get_student(db, student_id)
     if not s:
-        raise HTTPException(404,"学生不存在")
+        raise HTTPException(status_code=404, detail="Student not found")
     return s
 
 
 @router.get("/students/", response_model=list[StudentResponse])
-async def get_all_students():
-    students = manager.show_all()
-    return students
+async def get_all_students(db: Session = Depends(get_db)):
+    return crud.get_all(db)
 
 
 @router.delete("/students/{student_id}")
-async def delete_student(student_id: str):
-    is_or = manager.delete_student(student_id)
-    if not is_or:
-        raise HTTPException(404, "学生不存在")
-    return {"msg": "删除成功"}
+async def delete_student(student_id: str, db: Session = Depends(get_db)):
+    if not crud.delete_student(db, student_id):
+        raise HTTPException(status_code=404, detail="Student not found")
+    return {"message": "Student deleted"}
 
 
 @router.put("/students/{student_id}", response_model=StudentResponse)
-async def update_student(student_id: str, student: StudentUpdate):
-    s = manager.find_student(student_id)
-    if not s:
-        raise HTTPException(404, "学生不存在")
-    if student.name is not None:
-        s.name = student.name
-    if student.sex is not None:
-        s.sex = student.sex
-    if student.age is not None:
-        s.age = student.age
-    if student.score is not None:
-        s.score = student.score
-    manager.save_to_file()
-    return s
-
+async def update_student(student_id: str, student: StudentUpdate, db: Session = Depends(get_db)):
+    return crud.update_student(db, student_id, student.name, student.age,student.sex, student.score)

@@ -6,7 +6,7 @@ class StudentCreate(BaseModel):
     name: str
     sex: str
     age: int
-    student_id: str
+    s_id: str
     score: int
 
 
@@ -21,7 +21,7 @@ class StudentResponse(BaseModel):
     name: str
     sex: str
     age: int
-    student_id: str
+    s_id: str
     score: int
 
 

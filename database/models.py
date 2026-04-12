@@ -9,3 +9,9 @@ class Student(Base):
     age = Column(Integer)
     s_id = Column(String, primary_key=True, index=True)
     score = Column(Integer)
+
+
+class User(Base):
+    __tablename__ = 'user'
+    username= Column(String, primary_key=True, index=True)
+    password = Column(String)

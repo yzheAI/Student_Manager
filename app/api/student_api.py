@@ -36,7 +36,7 @@ async def add_student(student: StudentCreate, db: Session = Depends(get_db)):  #
 
 @router.get("/{student_id}", response_model=StudentResponse, summary="查找学生")
 async def get_students(student_id: str, db: Session = Depends(get_db)):
-    s=crud.get_student(db, student_id)
+    s = crud.get_student(db, student_id)
     if not s:
         raise HTTPException(status_code=404, detail="Student not found")
     return s

@@ -1,5 +1,6 @@
-from database.models import Student
+from database.models import Student, User
 from sqlalchemy.orm import Session
+import bcrypt
 
 
 def create_student(db: Session, name: str, sex: str, age: int, s_id: str, score: int) -> Student:
@@ -27,22 +28,6 @@ def delete_student(db: Session, s_id: str) -> bool:
     return True
 
 
-# def update_student(db: Session, student_id: str, name=None, age=None, sex=None, score=None) -> Student:
-#     student = get_student(db, student_id)
-#     if not student:
-#         raise Exception("Student not found")
-#     if name is not None:
-#         student.name = name
-#     if sex is not None:
-#         student.sex = sex
-#     if age is not None:
-#         student.age = age
-#     if score is not None:
-#         student.score = score
-#     db.commit()
-#     db.refresh(student)
-#     return student
-
 def update_student(db: Session, student_id: str, **kwargs) -> Student:
     """
     kwargs: 只包含需要更新的字段
@@ -57,3 +42,22 @@ def update_student(db: Session, student_id: str, **kwargs) -> Student:
     db.commit()
     db.refresh(student)
     return student
+
+
+def create_user(db: Session, username, password):
+    hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
+    user = User(username=username, password=hashed_password.decode('utf-8'))
+    db.add(user)
+    db.commit()
+    db.refresh(user)
+    return user
+
+
+def get_user(db: Session, username: str):
+    user = db.query(User).filter(User.username == username).first()
+    return user
+
+
+def verify_user(plain_password, hashed_password):
+    return bcrypt.checkpw(plain_password.encode('utf-8'), hashed_password.encode('utf-8'))
+

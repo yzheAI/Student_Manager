@@ -1,10 +1,10 @@
-import uuid
 from fastapi import Depends, HTTPException, APIRouter
 from sqlalchemy.orm import Session
 from database.crud import create_user, get_user, verify_user
 from model.student_schema import UserRegister, UserLogin, TokenResponse
 from database.db_core import get_db
-from utils.jwt_utils import create_access_token, get_current_user
+from utils.jwt_utils import create_access_token
+from app.api.security import get_current_user
 router = APIRouter(prefix="/users", tags=["用户管理"])
 
 

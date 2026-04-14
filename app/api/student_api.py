@@ -4,21 +4,9 @@ from model.student_schema import StudentResponse, StudentUpdate, StudentCreate
 from database import crud
 from sqlalchemy.orm import Session
 from database.db_core import get_db
+from app.api.security import get_current_user
 
 router = APIRouter(prefix="/students", tags=["学生管理"])
-"""
-验证数据类型，
-自动生成JSON schema
-确保前端请求时数据合法
-"""
-
-
-class StudentBase(BaseModel):
-    name: str
-    sex: str
-    age: int
-    s_id: str
-    score: int
 
 
 '''
@@ -30,12 +18,21 @@ class StudentBase(BaseModel):
 
 
 @router.post("/", response_model=StudentResponse, summary="添加学生")
-async def add_student(student: StudentCreate, db: Session = Depends(get_db)):  # 自动解析为StudentBase对象
-    return crud.create_student(db, student.name, student.sex, student.age, student.s_id, student.score)
+async def add_student(
+        student: StudentCreate,
+        db: Session = Depends(get_db),
+        user: dict = Depends(get_current_user)):  # 自动解析为StudentBase对象
+    if user["role"] != "admin":
+        raise HTTPException(403, "只能管理员添加")
+    s = crud.create_student(db, student.name, student.sex, student.age, student.s_id, student.score)
+    return s
 
 
 @router.get("/{student_id}", response_model=StudentResponse, summary="查找学生")
-async def get_students(student_id: str, db: Session = Depends(get_db)):
+async def get_students(
+        student_id: str,
+        db: Session = Depends(get_db),
+        user: str = Depends(get_current_user)):
     s = crud.get_student(db, student_id)
     if not s:
         raise HTTPException(status_code=404, detail="Student not found")
@@ -43,19 +40,31 @@ async def get_students(student_id: str, db: Session = Depends(get_db)):
 
 
 @router.get("/", response_model=list[StudentResponse], summary="获取所有学生")
-async def get_all_students(db: Session = Depends(get_db)):
+async def get_all_students(
+        db: Session = Depends(get_db),
+        user: str = Depends(get_current_user)):
     return crud.get_all(db)
 
 
 @router.delete("/{student_id}", summary="删除学生")
-async def delete_student(student_id: str, db: Session = Depends(get_db)):
+async def delete_student(
+        student_id: str,
+        db: Session = Depends(get_db),
+        user: dict = Depends(get_current_user)):
+    if user["role"] != "admin":
+        raise HTTPException(403, "只有管理员能删除")
     if not crud.delete_student(db, student_id):
         raise HTTPException(status_code=404, detail="Student not found")
     return {"message": "Student deleted"}
 
 
 @router.put("/{student_id}", response_model=StudentResponse, summary="修改学生信息")
-async def update_student(student_id: str, student: StudentUpdate, db: Session = Depends(get_db)):
+async def update_student(
+        student_id: str, student: StudentUpdate,
+        db: Session = Depends(get_db),
+        user: dict = Depends(get_current_user)):
+    if user["role"] != "admin":
+        raise HTTPException(403, "只能管理员更改")
     update_data = student.dict(exclude_unset=True)
     s = crud.update_student(db, student_id, **update_data)
     if not s:

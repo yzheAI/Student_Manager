@@ -3,7 +3,7 @@
 # 项目简介
 这是一个基于 Python 实现的学生管理系统，最初为命令行（CLI）版本，后逐步升级为基于 FastAPI 的 Web 应用，并完成数据存储层从 JSON 文件到 SQLite 数据库的重构。
 
-项目采用分层架构设计，支持学生信息的增删改查，并具备良好的可扩展性与工程化结构。
+项目采用分层架构设计，支持学生信息的增删改查，引入JWT身份认证与基础权限控制，并具备良好的可扩展性与工程化结构。
 
 系统特点：
 - 支持 **CLI → Web API 演进**
@@ -11,7 +11,7 @@
 - 分离 **业务模型（Entity）与 API 模型（Pydantic Schema）**
 - 分层架构（API / Service / Repository / Database）
 - 支持日志记录与错误追踪
-- 加入JWT登录，用户登录注册功能
+- 实现 JWT 用户认证与基础 RBAC 权限控制
 
 ---
 
@@ -24,13 +24,17 @@
 - 修改学生信息
 - 删除学生
 
-### FastAPI 版本（当前）
+### FastAPI 版本
 - 提供 RESTful API 接口
 - 自动生成接口文档（/docs）
 - 数据校验（Pydantic）
 - 学生信息增删改查（CRUD）
 - 分层架构解耦业务逻辑
 - 登录注册JWT
+
+### 权限控制模块
+- admin 用户可进行增删改操作
+- 普通用户仅可查询数据
 
 ---
 
@@ -43,6 +47,7 @@
 - 面向对象编程（OOP）
 - 分层架构设计
 - JWT
+- bcrypt(密码加密)
 
 ---
 
@@ -51,30 +56,34 @@
 ```text
 Student_Manager/
 ├── app/
-│   ├── api/                # 接口层（FastAPI 路由）
-│   │   └── student_api.py
+│   ├── api/                # 路由层（Controller）
+│   │   ├── student_api.py
+│   │   └── user_api.py
 │   ├── handlers/           # CLI遗留逻辑（逐步废弃）
-│   └── logs/               # 日志目录
+│   └── logs/
 │
-├── database/               # 数据库层（核心升级）
-│   ├── crud.py             # 数据库操作（CRUD）
-│   ├── db_core.py          # 数据库连接管理（engine / Session）
+├── database/
+│   ├── crud.py             # 数据库操作层（DAO）
+│   ├── db_core.py          # 数据库连接管理
 │   └── models.py           # ORM模型定义
 │
-├── model/                  # 数据模型层
-│   ├── student.py          # 业务实体（Entity）
-│   └── student_schema.py   # API模型（Pydantic）
+├── model/
+│   ├── student.py          # 业务实体层
+│   └── student_schema.py   # Pydantic 数据校验层
 │
-├── service/                # 业务逻辑层
-│   └── student_service.py
+├── service/                # 业务逻辑层（可扩展）
 │
-├── repository/             # 旧版数据访问层（JSON版本遗留）
+├── repository/             # JSON版本遗留（历史结构）
 │
-├── data/                   # JSON数据（已废弃）
-│   └── students.json
+├── utils/
+│   ├── jwt_utils.py        # JWT工具类
+│   ├── security.py         # 鉴权逻辑
+│   └── response.py         # 统一返回封装
 │
-├── logs/                   # 全局日志
+├── data/
+│   └── students.json       # 旧数据存储（已废弃）
 │
-├── students.db             # SQLite数据库
-├── main.py                 # 启动入口
+├── logs/
+├── students.db
+├── main.py
 └── README.md

@@ -1,10 +1,9 @@
 from fastapi import Depends, HTTPException, APIRouter
 from sqlalchemy.orm import Session
-from database.crud import create_user, get_user, verify_user
-from model.student_schema import UserRegister, UserLogin, TokenResponse
-from database.db_core import get_db
-from utils.jwt_utils import create_access_token
-from app.api.security import get_current_user
+from app.db.crud import create_user, get_user, verify_user
+from app.schemas.student_schema import UserRegister, UserLogin, TokenResponse
+from app.db.session import get_db
+from app.core.security import get_current_user, login_user
 router = APIRouter(prefix="/users", tags=["用户管理"])
 
 
@@ -21,9 +20,7 @@ async def login(user: UserLogin, db: Session = Depends(get_db)):
     db_user = get_user(db, user.username)
     if not db_user or not verify_user(user.password, db_user.password):
         raise HTTPException(400, "用户名或密码错误")
-    access_token = create_access_token({
-        'sub': user.username,
-    })
+    access_token = login_user(user)
     return {
         "access_token": access_token,
         "token_type": "bearer"

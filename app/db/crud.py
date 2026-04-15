@@ -1,4 +1,4 @@
-from database.models import Student, User
+from app.models.student import Student, User
 from sqlalchemy.orm import Session
 import bcrypt
 

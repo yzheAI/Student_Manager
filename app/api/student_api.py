@@ -1,10 +1,9 @@
 from fastapi import Depends, HTTPException, APIRouter
-from pydantic import BaseModel
-from model.student_schema import StudentResponse, StudentUpdate, StudentCreate
-from database import crud
+from app.schemas.student_schema import StudentResponse, StudentUpdate, StudentCreate
+from app.db import crud
 from sqlalchemy.orm import Session
-from database.db_core import get_db
-from app.api.security import get_current_user
+from app.db.session import get_db
+from app.core.security import get_current_user
 
 router = APIRouter(prefix="/students", tags=["学生管理"])
 

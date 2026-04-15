@@ -9,7 +9,7 @@
 - 支持 **CLI → Web API 演进**
 - 数据存储由 **JSON 重构为 SQLite + SQLAlchemy ORM**
 - 分离 **业务模型（Entity）与 API 模型（Pydantic Schema）**
-- 分层架构（API / Service / Repository / Database）
+- 项目采用分层架构设计（API / Service / DB / Models / Core），实现了学生信息管理、用户认证与基础权限控制，并具备较好的可扩展性与工程化设计能力。
 - 支持日志记录与错误追踪
 - 实现 JWT 用户认证与基础 RBAC 权限控制
 
@@ -56,34 +56,30 @@
 ```text
 Student_Manager/
 ├── app/
-│   ├── api/                # 路由层（Controller）
+│   ├── api/                # 接口层（Controller）
 │   │   ├── student_api.py
 │   │   └── user_api.py
-│   ├── handlers/           # CLI遗留逻辑（逐步废弃）
-│   └── logs/
 │
-├── database/
-│   ├── crud.py             # 数据库操作层（DAO）
-│   ├── db_core.py          # 数据库连接管理
-│   └── models.py           # ORM模型定义
+│   ├── core/               # 核心模块（基础设施）
+│   │   ├── jwt_utils.py
+│   │   ├── log_util.py
+│   │   └── security.py
 │
-├── model/
-│   ├── student.py          # 业务实体层
-│   └── student_schema.py   # Pydantic 数据校验层
+│   ├── db/                 # 数据库层
+│   │   ├── crud.py
+│   │   └── session.py
 │
-├── service/                # 业务逻辑层（可扩展）
+│   ├── models/            # ORM 数据模型层
+│   │   └── student.py
 │
-├── repository/             # JSON版本遗留（历史结构）
+│   ├── schemas/           # Pydantic 数据校验层
+│   │   └── student_schema.py
 │
-├── utils/
-│   ├── jwt_utils.py        # JWT工具类
-│   ├── security.py         # 鉴权逻辑
-│   └── response.py         # 统一返回封装
+│   └── service/           # 业务逻辑层
+│       └── student_service.py
 │
-├── data/
-│   └── students.json       # 旧数据存储（已废弃）
-│
-├── logs/
-├── students.db
-├── main.py
+├── logs/                  # 日志目录
+├── .env                   # 环境变量配置
+├── students.db            # SQLite 数据库文件
+├── main.py                # 项目入口
 └── README.md

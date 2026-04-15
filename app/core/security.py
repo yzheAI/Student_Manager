@@ -1,6 +1,7 @@
 from fastapi import Depends, HTTPException
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
-from utils.jwt_utils import decode_token
+from app.core.jwt import decode_token
+from app.core.jwt import create_access_token
 
 security = HTTPBearer()
 
@@ -18,3 +19,11 @@ def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(securit
         "username": username,
         "role": role
     }
+
+
+def login_user(user):
+    access_token = create_access_token({
+        'sub': user['username'],
+        'role': user['role']
+    })
+    return access_token

@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from app.api.student_api import router
 from app.api import user_api
 import uvicorn
-from database.db_core import Base, engine
+from app.db.session import Base, engine
 Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="学生管理系统 API")

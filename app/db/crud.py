@@ -28,14 +28,14 @@ def delete_student(db: Session, s_id: str) -> bool:
     return True
 
 
-def update_student(db: Session, student_id: str, **kwargs) -> Student:
+def update_student(db: Session, student_id: str, **kwargs):
     """
     kwargs: 只包含需要更新的字段
     自动过滤 None，未传字段不会被覆盖
     """
     student = get_student(db, student_id)
     if not student:
-        raise Exception("Student not found")
+        return None
     for key, value in kwargs.items():
         if value is not None:
             setattr(student, key, value)
@@ -44,9 +44,13 @@ def update_student(db: Session, student_id: str, **kwargs) -> Student:
     return student
 
 
-def create_user(db: Session, username, password):
+def create_user(db: Session, username, password, role="user"):
     hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
-    user = User(username=username, password=hashed_password.decode('utf-8'))
+    user = User(
+        username=username,
+        password=hashed_password.decode('utf-8'),
+        role=role
+    )
     db.add(user)
     db.commit()
     db.refresh(user)

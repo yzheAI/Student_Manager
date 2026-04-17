@@ -32,10 +32,15 @@ class StudentResponse(BaseModel):
     s_id: str
     score: int
 
+    model_config = {
+        "from_attributes": True
+    }
+
 
 class UserRegister(BaseModel):
     username: str
     password: str
+    role: str
 
 
 class UserLogin(BaseModel):

@@ -23,7 +23,7 @@ def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(securit
 
 def login_user(user):
     access_token = create_access_token({
-        'sub': user['username'],
-        'role': user['role']
+        'sub': user.username,
+        'role': user.role
     })
     return access_token

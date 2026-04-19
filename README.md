@@ -1,7 +1,7 @@
-# Student Management System (CLI → FastAPI + SQLite + JWT)
+# Student Management System (CLI → FastAPI + MySQL + JWT)
 
 # 项目简介
-这是一个基于 Python 实现的学生管理系统，最初为命令行（CLI）版本，后逐步升级为基于 FastAPI 的 Web 应用，并完成数据存储层从 JSON 文件到 SQLite 数据库的重构。
+这是一个基于 Python 实现的学生管理系统，最初为命令行（CLI）版本，后逐步升级为基于 FastAPI 的 Web 应用，并完成数据存储层从 JSON 文件到 MySQL 数据库的重构。
 
 项目采用分层架构设计，支持学生信息的增删改查，引入JWT身份认证与基础权限控制，并具备良好的可扩展性与工程化结构。
 
@@ -43,7 +43,7 @@
 - Python 3
 - FastAPI
 - SQLAlchemy（ORM）
-- SQLite（当前数据存储）
+- MySQL（数据存储）
 - Pydantic（数据校验）
 - 面向对象编程（OOP）
 - 分层架构设计
@@ -80,7 +80,7 @@ Student_Manager/
 │       └── student_service.py
 │
 ├── logs/                  # 日志目录
-├── .env                   # 环境变量配置
+├── .env                   # 环境变量配置+数据库配置
 ├── students.db            # SQLite 数据库文件
 ├── main.py                # 项目入口
 └── README.md

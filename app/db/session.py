@@ -1,11 +1,24 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, declarative_base
+from dotenv import load_dotenv
+import os
 
-PATH = "sqlite:///students.db"
+load_dotenv()
+DB_USER = os.getenv("DB_USER")
+DB_PASSWORD = os.getenv("DB_PASSWORD")
+DB_NAME = os.getenv("DB_NAME")
+DB_HOST = os.getenv("DB_HOST")
+DB_PORT = os.getenv("DB_PORT")
+
+
+PATH = (
+    f"mysql+pymysql://{DB_USER}:{DB_PASSWORD}"
+    f"@{DB_HOST}:{DB_PORT}/{DB_NAME}"
+)
 engine = create_engine(
     PATH,
-    # SQLite特有，多线程访问
-    connect_args={"check_same_thread": False})
+    echo=True
+)
 
 # 创建Session工厂，每次操作从这里拿连接
 SessionLocal = sessionmaker(

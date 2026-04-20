@@ -32,6 +32,7 @@
 - 分层架构解耦业务逻辑
 - 登录注册JWT
 - 异常处理 + 统一返回格式
+- database url抽离
 
 ### 权限控制模块
 - admin 用户可进行增删改操作
@@ -56,31 +57,31 @@
 
 ```text
 Student_Manager/
+├── .venv/                   
 ├── app/
-│   ├── api/                # 接口层（Controller）
-│   │   ├── student_api.py
-│   │   └── user_api.py
-│
-│   ├── core/               # 核心模块（基础设施）
-│   │   ├── jwt_utils.py
-│   │   ├── log_util.py
-│   │   └── security.py
-│
-│   ├── db/                 # 数据库层
-│   │   ├── crud.py
-│   │   └── session.py
-│
-│   ├── models/            # ORM 数据模型层
-│   │   └── student.py
-│
-│   ├── schemas/           # Pydantic 数据校验层
-│   │   └── student_schema.py
-│
-│   └── service/           # 业务逻辑层
-│       └── student_service.py
-│
-├── logs/                  # 日志目录
-├── .env                   # 环境变量配置+数据库配置
-├── students.db            # SQLite 数据库文件
-├── main.py                # 项目入口
-└── README.md
+│   ├── api/
+│   │   ├── student_api.py    
+│   │   └── user_api.py       
+│   ├── core/
+│   │   ├── config.py         
+│   │   ├── jwt.py            
+│   │   ├── logger.py         
+│   │   ├── response.py       
+│   │   └── security.py       
+│   ├── db/
+│   │   ├── crud.py          
+│   │   └── session.py        
+│   ├── models/
+│   │   └── student.py        
+│   ├── schemas/
+│   │   ├── response_schema.py 
+│   │   └── student_schema.py   
+│   ├── service/              
+│   └── .env                  
+├── logs/                    
+├── .gitignore                
+├── main.py                   
+├── README.md                 
+├── students.db               
+├── temp.py                 
+└── test.html                 

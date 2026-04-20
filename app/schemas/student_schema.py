@@ -35,25 +35,3 @@ class StudentResponse(BaseModel):
     model_config = {
         "from_attributes": True
     }
-
-
-class UserRegister(BaseModel):
-    username: str
-    password: str
-    role: str
-
-
-class UserLogin(BaseModel):
-    username: str
-    password: str
-
-
-class TokenResponse(BaseModel):
-    access_token: str
-    token_type: str
-
-
-
-
-
-

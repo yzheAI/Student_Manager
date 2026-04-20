@@ -57,31 +57,34 @@
 
 ```text
 Student_Manager/
-├── .venv/                   
+├── .venv/                          
 ├── app/
 │   ├── api/
-│   │   ├── student_api.py    
-│   │   └── user_api.py       
+│   │   ├── student_api.py          
+│   │   └── user_api.py             
+│   ├── config/
+│   │   ├── jwt.py                 
+│   │   └── setting.py              
 │   ├── core/
-│   │   ├── config.py         
-│   │   ├── jwt.py            
-│   │   ├── logger.py         
-│   │   ├── response.py       
-│   │   └── security.py       
+│   │   ├── logger.py             
+│   │   ├── response.py            
+│   │   └── security.py           
 │   ├── db/
-│   │   ├── crud.py          
-│   │   └── session.py        
+│   │   ├── crud.py                 
+│   │   └── session.py          
 │   ├── models/
-│   │   └── student.py        
+│   │   ├── student.py            
+│   │   └── user.py             
 │   ├── schemas/
-│   │   ├── response_schema.py 
-│   │   └── student_schema.py   
-│   ├── service/              
-│   └── .env                  
-├── logs/                    
-├── .gitignore                
-├── main.py                   
-├── README.md                 
-├── students.db               
-├── temp.py                 
-└── test.html                 
+│   │   ├── response_schema.py   
+│   │   ├── student_schema.py     
+│   │   └── user_schema.py         
+│   ├── service/                   
+│   └── .env                       
+├── logs/                      
+├── .gitignore                     
+├── main.py                        
+├── README.md                    
+├── students.db                   
+├── temp.py                       
+└── test.html                                    

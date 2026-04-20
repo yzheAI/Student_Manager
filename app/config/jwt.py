@@ -1,6 +1,6 @@
 from jose import jwt
 from datetime import datetime, timedelta
-from app.core.config import settings
+from app.config.setting import settings
 
 ALGORITHM = "HS256"
 EXPIRE_MINUTES = 60

@@ -9,10 +9,3 @@ class Student(Base):
     age = Column(Integer)
     s_id = Column(String(255), primary_key=True, index=True)
     score = Column(Integer)
-
-
-class User(Base):
-    __tablename__ = 'user'
-    username = Column(String(50), primary_key=True, index=True)
-    password = Column(String(255))
-    role = Column(String(50), default="user")

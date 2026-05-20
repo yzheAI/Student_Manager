@@ -4,7 +4,7 @@ from app.core.security import get_current_user
 from app.core.response import success
 from app.db.session import get_db
 from app.schemas.department_schema import DepartmentResponse
-from app.schemas.employee_schema import EmployeeCreate, EmployeeResponse, EmployeeUpdate
+from app.schemas.employee_schema import EmployeeCreate, EmployeeResponse, EmployeeUpdate, EmployeeQuery
 from app.schemas.page_schema import PageResponse
 from app.schemas.response_schema import ResponseModel
 from app.service.employee_service import (employee_delete_service, employee_register_service, employee_update_service,
@@ -33,18 +33,21 @@ async def employee_register(
 
 @employee_router.get('/search', response_model=ResponseModel[PageResponse[EmployeeResponse]], summary="员工列表（支持分页+模糊查询）")
 async def search_employees(
-        name: str = "",
-        age: int | None = None,
-        gender: str = "",
-        role: str = "",
-        order_by: str = "",
-        order: str = "desc",
-        page: int = 1,
-        size: int = 10,
+        employee: EmployeeQuery = Depends(),
         db: Session = Depends(get_db),
         user: dict = Depends(get_current_user)
 ):
-    employees = employees_search_service(db, name, age, gender, role, order_by, order, page, size)
+    employees = employees_search_service(
+        db,
+        employee.name,
+        employee.age,
+        employee.gender,
+        employee.role,
+        employee.order_by,
+        employee.order,
+        employee.page,
+        employee.size
+    )
     return success(employees)
 
 

@@ -26,3 +26,11 @@ class AnnounceUpdate(BaseModel):
     title: str
     content: str
     author: str
+
+
+class AnnounceQuery(BaseModel):
+    title: str = ""
+    content: str = ""
+    author: str = ""
+    page: int = 1
+    size: int = 10

@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 from app.core.security import get_current_user
 from app.core.response import success
 from app.db.session import get_db
-from app.schemas.department_schema import DepartmentResponse, DepartmentCreate
+from app.schemas.department_schema import DepartmentResponse, DepartmentCreate, DepartmentQuery
 from app.schemas.employee_schema import EmployeeResponse
 from app.schemas.page_schema import PageResponse
 from app.schemas.response_schema import ResponseModel
@@ -27,14 +27,11 @@ async def create_department(
 
 @department_router.get('/search', response_model=ResponseModel[PageResponse[DepartmentResponse]], summary="部门列表（支持分页+模糊查询）")
 async def search_department(
-        name: str = "",
-        description: str = "",
-        page: int = 1,
-        size: int = 10,
+        department: DepartmentQuery = Depends(),
         db: Session = Depends(get_db),
         user: dict = Depends(get_current_user)
 ):
-    result = department_search_service(db, name, description, page, size)
+    result = department_search_service(db, department.name, department.description, department.page, department.size)
     return success(result)
 
 

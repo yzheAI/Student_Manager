@@ -45,3 +45,14 @@ class EmployeeUpdate(BaseModel):
     gender: str
     department_id: int
     role: str
+
+
+class EmployeeQuery(BaseModel):
+    name: str = ""
+    age: int | None = None
+    gender: str = ""
+    role: str = ""
+    order_by: str = ""
+    order: str = "desc"
+    page: int = 1
+    size: int = 10

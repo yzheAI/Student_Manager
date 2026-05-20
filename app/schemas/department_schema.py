@@ -18,3 +18,10 @@ class DepartmentResponse(BaseModel):
     model_config = {
         "from_attributes": True
     }
+
+
+class DepartmentQuery(BaseModel):
+    name: str = ""
+    description: str = ""
+    page: int = 1
+    size: int = 10

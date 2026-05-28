@@ -92,3 +92,4 @@ app
 2. 修改 .env文件
 3. 初始化数据库：alembic upgrade head
 4. 启动项目：uvicorn app.main:app --reload
+5. ubuntu启动Redis：sudo systemctl start redis-server
